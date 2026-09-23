@@ -58,3 +58,36 @@ npm run data:display
 ## 许可
 
 代码、整理后的数据和项目图像采用 [CC BY-NC-SA 4.0](LICENSE) 发布。使用时请保留 Sean Wong 署名，并遵守非商业和相同方式共享条件。
+
+## 维护：同步上游内容（保留自定义样式）
+
+本仓库 fork 自 [SeanWong17/Vascular-Plant-atlas](https://github.com/SeanWong17/Vascular-Plant-atlas)。原项目更新时，只同步「内容」，样式（`src/styles.css`）始终保留本地版本。
+
+### 一次性配置（已完成）
+
+```bash
+git remote add upstream https://github.com/SeanWong17/Vascular-Plant-atlas.git
+git config merge.ours.driver true        # 启用 styles.css 的 merge=ours 兜底保护
+```
+
+`.gitattributes` 已为 `src/styles.css` 标记 `merge=ours`：即使误执行 `git merge upstream`，该文件也会自动保留本地版本。真正的保护仍是「永不对其执行 `git checkout upstream/main --`」。
+
+### 每次同步上游更新
+
+```bash
+git fetch upstream
+git checkout upstream/main -- data/ assets/ index.html   # 只同步内容（数据、图片、页面结构）
+# 如需同步原项目逻辑更新：git checkout upstream/main -- src/app.js
+# 永远不要执行：git checkout upstream/main -- src/styles.css
+git add data/ assets/ index.html
+git commit -m "sync upstream content"
+git push origin main
+```
+
+### 文件归属约定
+
+| 路径 | 归属 | 同步策略 |
+|---|---|---|
+| `data/` `assets/` `index.html` | 内容 | 跟随 upstream（每次 checkout） |
+| `src/app.js` | 逻辑 | 视情况 `git diff` 审查后决定 |
+| `src/styles.css` | 本地样式 | 永不 checkout，受 `merge=ours` 保护 |

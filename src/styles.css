@@ -223,6 +223,27 @@ input:focus-visible {
   background: #edf4ef;
 }
 
+.more-link {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--line-dark);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+.more-link:hover {
+  border-color: var(--moss);
+  color: var(--moss);
+  background: #edf4ef;
+}
+
 .search-results {
   position: absolute;
   z-index: 12;
@@ -940,6 +961,22 @@ main {
   color: var(--ink-soft);
   font-size: 11px;
   line-height: 1.5;
+}
+
+.site-footer {
+  margin-top: 48px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-dark);
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0 auto;
+  max-width: 860px;
 }
 
 .text-button {
