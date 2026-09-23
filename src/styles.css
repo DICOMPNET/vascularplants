@@ -983,18 +983,6 @@ main {
   margin-top: 10px;
 }
 
-.site-footer a {
-  color: var(--moss);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: var(--moss);
-}
-
-.site-footer a:hover {
-  color: var(--ink);
-  text-decoration-color: var(--ink);
-}
-
 .text-button {
   flex: 0 0 auto;
   padding: 0 11px;
