@@ -40,7 +40,7 @@
       sourcesTitle: '三个体系，一张可行走的植物谱系', aboutEyebrow: 'ABOUT THE ATLAS', aboutTitle: '数据、图像与使用方式',
       aboutData: '本图谱内置 data/ 数据集：480 个现生维管植物科被组织进 APG IV、PPG I 与 Yang 等人的裸子植物分类骨架。',
       aboutTree: '画布先呈现可扫描的高层分支；进入任一节点后会展开其下的分类关系。右侧焦点面板和代表切片均来自数据中的代表物种记录。',
-      aboutImages: '所有图像是 GPT Image 2 生成的自然史插画。它们用于帮助浏览形态和类群，不应替代专业分类或野外鉴定资料。', loading: '正在整理植物谱系', moreLink: '更多', footerDisclaimer: '本站内容仅供学习交流使用。转载内容版权归原著作权人所有，未经许可不得用于商业用途。如存在侵权内容，请联系站长，核实后将及时删除。访问本站即表示知悉并同意本声明。'
+      aboutImages: '所有图像是 GPT Image 2 生成的自然史插画。它们用于帮助浏览形态和类群，不应替代专业分类或野外鉴定资料。', loading: '正在整理植物谱系', moreLink: '更多', footerDisclaimer: '本站内容仅供学习交流使用。转载内容版权归原著作权人所有，未经许可不得用于商业用途。如存在侵权内容，请联系站长，核实后将及时删除。访问本站即表示知悉并同意本声明。', footerLicenseHead: '图像用于教育性浏览和形态参考，不替代标本、原始照片、专业植物学图版或野外鉴定资料。遵循', footerLicenseTail: '协议，感谢 Sean Wong 的开源。'
     },
     en: {
       brandKicker: 'LIVING VASCULAR PLANTS', brandName: 'Flora Atlas', brandSubtitle: 'Vascular Plant Families',
