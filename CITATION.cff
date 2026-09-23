@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "Vascular Plant Atlas"
+message: "If you use this atlas or its generated images, please cite this repository."
+type: software
+authors:
+  - family-names: Wong
+    given-names: Sean
+repository-code: "https://github.com/SeanWong17/Vascular-Plant-atlas"
+url: "https://seanwong17.github.io/Vascular-Plant-atlas/"
+license: CC-BY-NC-SA-4.0

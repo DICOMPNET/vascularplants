@@ -1,0 +1,6 @@
+node_modules/
+.codegraph/
+.DS_Store
+*.tmp
+*.log
+data/*_regeneration_queue.txt

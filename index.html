@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="植系图谱：面向现生维管植物的交互式科级分类探索工具。">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>植系图谱 · Flora Atlas</title>
+  <link rel="stylesheet" href="src/styles.css">
+  <script defer src="vendor/d3.min.js"></script>
+  <script defer src="src/app.js"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="brand-lockup" aria-label="植系图谱">
+        <span class="brand-kicker" data-i18n="brandKicker">LIVING VASCULAR PLANTS</span>
+        <h1 data-i18n="brandName">植系图谱</h1>
+        <span class="brand-subtitle" data-i18n="brandSubtitle">Flora Atlas</span>
+      </div>
+
+      <div class="header-meta">
+        <p data-i18n="headerDescription">从石松到被子植物，循着 596 个分类节点浏览现生维管植物。</p>
+      </div>
+
+      <div class="header-actions">
+          <label class="search-field" for="taxon-search">
+          <span class="search-label" data-i18n="searchLabel">检索</span>
+          <input id="taxon-search" type="search" autocomplete="off" placeholder="科名、代表种或中文名" aria-controls="search-results" aria-expanded="false">
+          <button id="clear-search" class="clear-search" type="button" aria-label="清除检索" title="清除检索" hidden>&times;</button>
+          <div id="search-results" class="search-results" role="listbox"></div>
+        </label>
+        <div class="language-switch" role="group" aria-label="界面语言">
+          <button id="language-zh" class="language-button is-active" type="button" aria-pressed="true">中文</button>
+          <button id="language-en" class="language-button" type="button" aria-pressed="false">EN</button>
+        </div>
+        <button id="about-button" class="icon-button" type="button" aria-label="数据与方法" title="数据与方法">i</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="atlas-workbench" aria-labelledby="atlas-title">
+        <div class="workbench-topline">
+          <div>
+            <p class="eyebrow" data-i18n="taxonomyEyebrow">TAXONOMY EXPLORER</p>
+            <h2 id="atlas-title" data-i18n="taxonomyTitle">维管植物的现生分支</h2>
+          </div>
+          <div id="dataset-metrics" class="metrics" aria-label="数据概览">
+            <span><strong>480</strong> 科</span>
+            <span><strong>596</strong> 节点</span>
+            <span><strong>3</strong> 分类体系</span>
+          </div>
+        </div>
+
+        <div id="system-tabs" class="system-tabs" role="tablist" aria-label="按主要大类筛选">
+          <button type="button" class="system-tab is-active" data-system="all" role="tab" aria-selected="true" data-i18n="systemAll">全部谱系</button>
+          <button type="button" class="system-tab" data-system="pteridophyta" role="tab" aria-selected="false" data-i18n="systemPteridophyta">石松与蕨类</button>
+          <button type="button" class="system-tab" data-system="gymnosperms" role="tab" aria-selected="false" data-i18n="systemGymnosperms">裸子植物</button>
+          <button type="button" class="system-tab" data-system="angiosperms" role="tab" aria-selected="false" data-i18n="systemAngiosperms">被子植物</button>
+        </div>
+
+        <div class="atlas-layout">
+          <section class="tree-panel" aria-labelledby="tree-title">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-label" data-i18n="treeLabel">谱系画布</p>
+                <h3 id="tree-title" data-i18n="treeTitle">从根系进入一个分支</h3>
+              </div>
+              <div class="tree-actions" aria-label="图谱视图控制">
+                <button id="zoom-out" class="icon-button" type="button" aria-label="缩小图谱" title="缩小">−</button>
+                <button id="zoom-in" class="icon-button" type="button" aria-label="放大图谱" title="放大">+</button>
+                <button id="fit-tree" class="fit-button" type="button" title="适配当前分支" data-i18n="fitTree">适配</button>
+              </div>
+            </div>
+
+            <nav id="breadcrumb" class="breadcrumb" aria-label="当前分类路径"></nav>
+            <div class="tree-context">
+              <p id="tree-context" class="tree-context-current"></p>
+              <div class="tree-legend" aria-label="分类层级图例">
+                <span><i class="legend-mark legend-mark-branch"></i><span data-i18n="legendBranch">主要分支</span></span>
+                <span><i class="legend-mark legend-mark-family"></i><span data-i18n="legendFamily">植物科</span></span>
+                <span><i class="legend-mark legend-mark-cluster"></i><span data-i18n="legendCluster">待展开</span></span>
+              </div>
+            </div>
+            <div id="tree-canvas" class="tree-canvas">
+              <svg id="lineage-tree" role="img" aria-label="植物分类谱系图"></svg>
+              <div id="tree-tooltip" class="tree-tooltip" role="status" aria-hidden="true"></div>
+              <div id="tree-empty" class="tree-empty" hidden data-i18n="treeEmpty">此分支没有可展示的下级分类。</div>
+            </div>
+            <p class="canvas-hint" data-i18n="canvasHint">拖拽浏览，滚轮缩放。点击分类节点进入分支，点击家族节点查看代表种。</p>
+          </section>
+
+          <aside class="detail-panel" aria-labelledby="detail-title">
+            <div class="detail-heading">
+              <p class="panel-label" data-i18n="familyFocus">FAMILY FOCUS</p>
+              <span id="detail-system" class="system-badge">APG IV</span>
+            </div>
+            <figure class="specimen-frame">
+              <img id="detail-image" alt="">
+              <figcaption id="detail-image-caption" data-i18n="imageCaption">代表性自然史插画</figcaption>
+            </figure>
+            <div class="detail-copy">
+              <p id="detail-rank" class="detail-rank">植物科</p>
+              <h3 id="detail-title">正在读取图谱</h3>
+              <p id="detail-latin" class="detail-latin"></p>
+              <p class="detail-summary-label" data-i18n="familySummary">科简介</p>
+              <p id="detail-description" class="detail-description"></p>
+            </div>
+            <div class="detail-annotations">
+              <section class="detail-annotation" aria-labelledby="detail-observation-label">
+                <p id="detail-observation-label" class="detail-annotation-label" data-i18n="observationLabel">观察要点</p>
+                <p id="detail-observation" class="detail-annotation-copy"></p>
+              </section>
+              <section class="detail-annotation" aria-labelledby="detail-representative-intro-label">
+                <p id="detail-representative-intro-label" class="detail-annotation-label" data-i18n="representativeLabel">代表物种介绍</p>
+                <p id="detail-representative-intro" class="detail-annotation-copy"></p>
+              </section>
+            </div>
+            <dl class="detail-facts">
+              <div>
+                <dt data-i18n="factRepresentative">代表种</dt>
+                <dd id="detail-representative">—</dd>
+              </div>
+              <div>
+                <dt data-i18n="factPath">分类路径</dt>
+                <dd id="detail-path">—</dd>
+              </div>
+              <div>
+                <dt data-i18n="factGbif">GBIF 记录</dt>
+                <dd id="detail-occurrences">—</dd>
+              </div>
+            </dl>
+            <button id="locate-family" class="locate-button" type="button" data-i18n="locateFamily">在图谱中定位</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="collection-section" aria-labelledby="collection-title">
+        <div class="collection-heading">
+          <div>
+            <p class="eyebrow" data-i18n="galleryEyebrow">LIVING PLANT INDEX</p>
+            <h2 id="collection-title" data-i18n="galleryTitle">480 个科级代表</h2>
+          </div>
+          <p id="gallery-status" class="gallery-status">科级代表载入中</p>
+        </div>
+        <div id="specimen-gallery" class="specimen-gallery" aria-live="polite"></div>
+        <div class="collection-footer">
+          <button id="shuffle-gallery" class="text-button" type="button" data-i18n="shuffleGallery">随机换一组</button>
+          <span data-i18n="galleryDisclaimer">插画为各科代表种的生成式自然史图像，不作野外鉴定依据。</span>
+        </div>
+      </section>
+
+      <section class="method-strip" aria-labelledby="methods-title">
+        <div>
+          <p class="eyebrow" data-i18n="sourcesEyebrow">CLASSIFICATION SOURCES</p>
+          <h2 id="methods-title" data-i18n="sourcesTitle">三个体系，一张可行走的植物谱系</h2>
+        </div>
+        <div id="source-list" class="source-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="about-dialog" class="about-dialog" aria-labelledby="about-title">
+    <div class="dialog-heading">
+      <div>
+        <p class="eyebrow" data-i18n="aboutEyebrow">ABOUT THE ATLAS</p>
+        <h2 id="about-title" data-i18n="aboutTitle">数据、图像与使用方式</h2>
+      </div>
+      <button id="close-about" class="icon-button" type="button" aria-label="关闭" title="关闭">&times;</button>
+    </div>
+    <div class="dialog-content">
+      <p data-i18n="aboutData">本图谱内置 <code>data/</code> 数据集：480 个现生维管植物科被组织进 APG IV、PPG I 与 Yang 等人的裸子植物分类骨架。</p>
+      <p data-i18n="aboutTree">画布先呈现可扫描的高层分支；进入任一节点后会展开其下的分类关系。右侧焦点面板和代表切片均来自数据中的代表物种记录。</p>
+      <p data-i18n="aboutImages">所有图像是 GPT Image 2 生成的自然史插画。它们用于帮助浏览形态和类群，不应替代专业分类或野外鉴定资料。</p>
+    </div>
+  </dialog>
+
+  <div id="loading-screen" class="loading-screen" role="status" aria-live="polite">
+    <div>
+      <span class="loading-mark">植</span>
+      <p data-i18n="loading">正在整理植物谱系</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# 保护自定义样式：即使误执行 git merge upstream，styles.css 也自动保留本地版本
+# 真正的保护仍是：永远不要对 styles.css 执行 git checkout upstream/main --
+src/styles.css merge=ours
